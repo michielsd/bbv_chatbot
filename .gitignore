@@ -159,6 +159,7 @@ cython_debug/
 # maps
 .streamlit/
 notities_bbv/
+iv3/
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
