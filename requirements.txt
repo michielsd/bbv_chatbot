@@ -1,5 +1,5 @@
 streamlit==1.46.1
 langchain-openai==0.3.27
 langchain-community==0.3.27
-langchain-chroma==0.2.4
+faiss-cpu
 openai==1.93.2

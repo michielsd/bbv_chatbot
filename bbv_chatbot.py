@@ -1,6 +1,6 @@
 import streamlit as st
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
-from langchain_chroma import Chroma
+from langchain_community.vectorstores import FAISS
 
 # Load secrets from Streamlit
 openai_api_key = st.secrets["OPENAI_API_KEY"]
@@ -16,9 +16,10 @@ if "openai_model" not in st.session_state:
 
 # Load the FAISS vectorstore and set up the retriever and LLM (do this only once)
 if "retriever" not in st.session_state or "llm" not in st.session_state:
-    vectorstore = Chroma(
-        persist_directory="vectorstore_bbv",
-        embedding_function=OpenAIEmbeddings()
+    vectorstore = FAISS.load_local(
+        "vectorstore_bbv",
+        OpenAIEmbeddings(),
+        allow_dangerous_deserialization=True
     )
     retriever = vectorstore.as_retriever()
     llm = ChatOpenAI(
