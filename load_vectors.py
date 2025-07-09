@@ -4,6 +4,7 @@ import fitz  # from PyMuPDF
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
+from langchain_community.vectorstores import Chroma
 from langchain.docstore.document import Document
 
 # Load variables from .env file
@@ -52,11 +53,24 @@ def load_and_split_pdfs(folder_path):
 
     return all_chunks
 
-def create_vectorstore(docs):
-    embeddings = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
-    vectorstore = FAISS.from_documents(docs, embeddings)
-    vectorstore.save_local("vectorstore_bbv")
+def create_vectorstore(docs, persist_directory="vectorstore_bbv"):
+    embeddings = OpenAIEmbeddings()
+    
+    vectorstore = Chroma.from_documents(
+        documents=docs,
+        embedding=embeddings,
+        persist_directory=persist_directory
+    )
+
+    vectorstore.persist()  # Ensure it's saved to disk
     return vectorstore
+
+
+#def create_vectorstore(docs):
+#    embeddings = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
+#    vectorstore = FAISS.from_documents(docs, embeddings)
+#    vectorstore.save_local("vectorstore_bbv")
+# #    return vectorstore
 
 if __name__ == "__main__":
     main()
